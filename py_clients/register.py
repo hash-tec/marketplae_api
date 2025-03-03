@@ -1,10 +1,17 @@
 import requests
 from getpass import getpass
 
-endpoints = "http://127.0.0.1:8000/api/register/"
-password = getpass()
-data= {"first_name": "First", "last_name": "person", 
-     "email":"firstperson@gmail.com","password": password,"password2":password, "gender":"M"}
-get_response = requests.post(endpoints, json=data)
+email= input("What is your email?\n")
+password = getpass("Your password?\n")
 
-print(get_response.json())
+# register_endpoints = "http://127.0.0.1:8000/api/register/"
+
+register_data= {"first_name": "First", "last_name": "person", 
+     "email":email,"password": password,"password2":password, "gender":"M"}
+register_response = requests.post(register_endpoints, json=register_data)
+
+
+
+
+
+
