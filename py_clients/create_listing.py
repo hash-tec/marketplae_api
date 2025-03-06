@@ -19,4 +19,8 @@ from getpass import getpass
 #     get_response = requests.post(endpoints, json = data, headers=headers)
 #     print(get_response.json())
 
-
+endpoints = "http://127.0.0.1:8000/api/products/"
+data = {"product_name":"First Product", "brand": "First Brand", "description": "First Description",
+            "price": 40 }
+get_response = requests.post(endpoints, json=data)
+print(get_response)

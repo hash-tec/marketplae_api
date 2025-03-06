@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 class Products(models.Model):
-    seller = models.ForeignKey( Customers, on_delete=models.CASCADE, null=False, verbose_name=_("Seller"))
+    seller = models.ForeignKey( Customers, on_delete=models.CASCADE, null=True, blank=True, verbose_name=_("Seller"))
     product_name = models.CharField(_("Product Name"), max_length=200)
     brand = models.CharField(_("Brand"), max_length=50, blank=False)
     description = models.TextField(_("Description"), blank=False)
