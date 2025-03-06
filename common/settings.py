@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'access',
+    'products',
 ]
 
 MIDDLEWARE = [
@@ -128,7 +129,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "access.UserModel"
+AUTH_USER_MODEL = "access.Customers"
 
 REST_FRAMEWORK = {
 

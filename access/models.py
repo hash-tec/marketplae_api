@@ -7,7 +7,7 @@ from .manager import UserManager
 
 # Create your models here.
 
-class UserModel(AbstractUser):
+class Customers(AbstractUser):
     username = None
     email = models.EmailField(_("Email Address"), unique=True)
     bio = models.TextField(_("Bio"), max_length=250, blank = True)
