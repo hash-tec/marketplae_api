@@ -17,3 +17,6 @@ class Products(models.Model):
 
     def discounted_price(self):
         calc_discount= float(self.price - (round(self.discount_percentage / 100) * self.price, 2))
+
+    def str(self):
+        return self.product_name

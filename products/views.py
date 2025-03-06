@@ -9,8 +9,9 @@ from rest_framework import status
 
 # Create your views here.
 class ProductListingApiView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request):
-        serializer = ProductsSerializers(data = request.data) 
+        serializer = ProductsSerializers(data = request.data, context = {"request":request}) 
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
