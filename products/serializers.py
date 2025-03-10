@@ -4,14 +4,19 @@ from .models import Products
 
 
 class ProductsSerializers(serializers.ModelSerializer):
+    seller = serializers.SerializerMethodField()
     class Meta:
         model = Products
-        exclude = ("slug", "date_created")
+        exclude = ("slug", "date_created", 'image')
 
-        def create(self, validated_data):
-            request = self.context.get("request")
-            if request and validated_data(request, "user"):
-                validated_data["seller"] = request.user
-            return super().create(validated_data)
 
+     
+    def get_seller(self, obj):
+        return obj.seller.email
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        validated_data["seller"] = request.user
+        return super().create(validated_data)
+   
 
