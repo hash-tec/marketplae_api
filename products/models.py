@@ -1,6 +1,7 @@
 from django.db import models
 from access.models import Customer
 from django.utils.translation import gettext_lazy as _
+from django.utils.text import slugify
 
 
 # Create your models here.
@@ -21,6 +22,11 @@ class Product(models.Model):
 
     def discounted_price(self):
         calc_discount= float(self.price - (round(self.discount_percentage / 100) * self.price, 2))
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.product_name)
+            super().save(*args, **kwargs)
 
     def str(self):
         return self.product_name

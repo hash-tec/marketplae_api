@@ -34,3 +34,6 @@ class ProductListDetailApiView(APIView):
             instance = Product.objects.all()
             serializer = ProductSerializers(instance, many = True)
             return Response(serializer.data)
+ 
+class CategoryApiView(APIView):
+    pass
