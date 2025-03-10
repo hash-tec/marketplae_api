@@ -24,8 +24,13 @@ class ProductListingApiView(APIView):
        
         
 
-class ProductsApiView(APIView):
-    def get(self, request):
-        instance = Product.objects.all()
-        serializer = ProductSerializers(instance, many = True)
-        return Response(serializer.data)
+class ProductListDetailApiView(APIView):
+    def get(self, request, pk = None):
+        if pk:
+            instance = Product.objects.get(id = pk)
+            serializer = ProductSerializers(instance)
+            return Response(serializer.data)
+        else:
+            instance = Product.objects.all()
+            serializer = ProductSerializers(instance, many = True)
+            return Response(serializer.data)
