@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import Customers
+from .models import Customer
 class RegisterUserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only = True)
     class Meta:
-        model = Customers
+        model = Customer
         fields = ["first_name","last_name", "email","password", "password2", "gender"]
         extra_kwargs = {"password":{'write_only': True}}
 
@@ -14,5 +14,5 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         
     def create(self, validated_data):
             validated_data.pop("password2")
-            user = Customers.objects.create_user(**validated_data)
+            user = Customer.objects.create_user(**validated_data)
             return user

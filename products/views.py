@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Products
-from .serializers import ProductsSerializers
+from .models import Product
+from .serializers import ProductSerializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -13,7 +13,7 @@ class ProductListingApiView(APIView):
     def post(self, request):
         seller = self.request.user.email
         print(seller)
-        serializer = ProductsSerializers(data = request.data, 
+        serializer = ProductSerializers(data = request.data, 
                                          context = {"request":request}) 
     
         if serializer.is_valid():
@@ -26,6 +26,6 @@ class ProductListingApiView(APIView):
 
 class ProductsApiView(APIView):
     def get(self, request):
-        instance = Products.objects.all()
-        serializer = ProductsSerializers(instance, many = True)
+        instance = Product.objects.all()
+        serializer = ProductSerializers(instance, many = True)
         return Response(serializer.data)

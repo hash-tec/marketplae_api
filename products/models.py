@@ -1,11 +1,11 @@
 from django.db import models
-from access.models import Customers
+from access.models import Customer
 from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
-class Products(models.Model):
-    seller = models.ForeignKey( Customers, on_delete=models.CASCADE, verbose_name=_("Seller"))
+class Product(models.Model):
+    seller = models.ForeignKey( Customer, on_delete=models.CASCADE, verbose_name=_("Seller"))
     product_name = models.CharField(_("Product Name"), max_length=200)
     brand = models.CharField(_("Brand"), max_length=50, blank=False)
     description = models.TextField(_("Description"), blank=False)

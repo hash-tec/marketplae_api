@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
-from .models import Customers
+from .models import Customer
 from .serializers import RegisterUserSerializer
 
 class RegisterUserApiView(APIView):

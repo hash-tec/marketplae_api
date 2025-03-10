@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from access.models import Customers
-from .models import Products
+from access.models import Customer
+from .models import Product
 
 
-class ProductsSerializers(serializers.ModelSerializer):
+class ProductSerializers(serializers.ModelSerializer):
     seller = serializers.SerializerMethodField()
     class Meta:
-        model = Products
+        model = Product
         exclude = ("slug", "date_created", 'image')
 
 
