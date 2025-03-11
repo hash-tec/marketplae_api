@@ -36,4 +36,9 @@ class ProductListDetailApiView(APIView):
             return Response(serializer.data)
  
 class CategoryApiView(APIView):
-    pass
+    def get(self, request, *args, **kwargs):
+        section = kwargs.get("category")
+        instance = Product.objects.filter(category = section)
+        serializer = ProductSerializers(instance, many = True)
+        print (section)
+        return Response(serializer.data, status=status.HTTP_200_OK)
