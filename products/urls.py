@@ -4,9 +4,10 @@ from .views import ProductListingApiView, ProductListDetailApiView, CategoryApiV
 
 
 urlpatterns = [
-    path('',ProductListDetailApiView.as_view(), name = "all" ),
+    path('',ProductListDetailApiView.as_view()),
     path('category/<str:category>/', CategoryApiView.as_view(), name = "name"),
-    path('<int:pk>/', ProductListDetailApiView.as_view()),
+    path('<int:pk>/', ProductListDetailApiView.as_view(), name = "all"),
     path('listing/',ProductListingApiView.as_view(), name = "listing" ),
     
 ]
+
