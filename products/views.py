@@ -18,7 +18,7 @@ class ProductListingApiView(APIView):
     
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else: 
             return Response({"message":f"Not valid {seller}", 'data': serializer.error_messages})
        
@@ -36,6 +36,17 @@ class ProductListDetailApiView(APIView):
             serializer = ProductSerializers(instance, many = True,  context = {"request":request})
             return Response(serializer.data)
  
+class ProductDeleteUpdateApiView(APIView):
+    def put(self, request, pk):
+        instance = Product.objects.get(pk = pk)
+        serializer = ProductSerializers(instance, data = request.data, partial = True)
+        return Response(serializer.data, status= status.HTTP_200_OK)
+    def delete(self, request, pk):
+        instance = Product.objects.get(pk = pk)
+        if instance:
+            instance.delete()
+            return Response({"message": "Item delist "}, status = status.HTTP_200_OK)
+        
 class CategoryApiView(APIView):
     def get(self, request, *args, **kwargs):
         section = kwargs.get("category")

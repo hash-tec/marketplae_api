@@ -4,13 +4,15 @@ from .models import Product
 
 
 class ProductSerializers(serializers.ModelSerializer):
-    seller = serializers.SerializerMethodField()
-    url = serializers.HyperlinkedIdentityField(view_name = "all", lookup_field = "pk")
+    seller= serializers.SerializerMethodField()
+    discounted_price = serializers.SerializerMethodField()
+    url = serializers.HyperlinkedIdentityField(view_name = "detail", lookup_field = "pk")
     class Meta:
         model = Product
         exclude = ("slug", "date_created", 'image')
 
-
+    def get_discounted_price(self, obj):
+        return obj.get_discounted_price()
      
     def get_seller(self, obj):
         return obj.seller.email
