@@ -3,7 +3,8 @@ from .models import Product
 from .serializers import ProductSerializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, DjangoModelPermissions
+from .permissions import UserPermission
 from rest_framework import status
 
 
@@ -25,7 +26,10 @@ class ProductListingApiView(APIView):
         
 
 class ProductListDetailApiView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [UserPermission]
+    def get_queryset(self):
+        return Product.objects.all()
+    
     def get(self, request, pk = None):
         if pk:
             instance = Product.objects.get(id = pk)
