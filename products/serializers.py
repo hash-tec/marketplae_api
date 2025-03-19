@@ -6,7 +6,7 @@ from .models import Product
 class ProductSerializers(serializers.ModelSerializer):
     seller= serializers.SerializerMethodField()
     discounted_price = serializers.SerializerMethodField()
-    url = serializers.HyperlinkedIdentityField(view_name = "detail", lookup_field = "pk")
+    url = serializers.HyperlinkedIdentityField(view_name = "products-detail", lookup_field = "pk")
     class Meta:
         model = Product
         exclude = ("slug", "date_created", 'image')

@@ -11,10 +11,10 @@ print(login_response.json()['access'])
 
 if login_response.status_code == 200:
     access_code = login_response.json()['access']
-    endpoints = "http://127.0.0.1:8000/api/products/update/2/"
-    data = {"product_name": "Second brand updated" }
+    endpoints = "http://127.0.0.1:8000/api/products/update/3/"
+    data = {"product_name": "Third brand patch" }
     headers = {
         "Authorization": f"Bearer {access_code}" 
     }
-    get_response = requests.patch(endpoints, json=data, headers=headers)
+    get_response = requests.put(endpoints, json=data, headers=headers)
     print(get_response.json())

@@ -28,10 +28,10 @@ class Product(models.Model):
         else:
             return("Discount is NIL")
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.product_name)
-            super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         self.slug = slugify(self.product_name)
+    #         super().save(*args, **kwargs)
 
     def str(self):
         return self.product_name

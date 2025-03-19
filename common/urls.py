@@ -26,5 +26,7 @@ urlpatterns = [
     path('api/token/logout', TokenBlacklistView.as_view(), name = 'token_blacklist'),
     path('api/', include('access.urls')),
     path('api/products/', include("products.urls")),
+    path('api/v2/', include('common.routers')),
     path('api/cart/', include('cart.urls')),
+
 ]

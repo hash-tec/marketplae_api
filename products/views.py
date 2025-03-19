@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, DjangoModelPermissions
 from common.permissions import UserPermission
-from rest_framework import status
+from rest_framework import status, viewsets
 
 
 # Create your views here.
@@ -24,7 +24,15 @@ class ProductListingApiView(APIView):
             return Response({"message":f"Not valid {seller}", 'data': serializer.error_messages})
        
         
-
+class ProductViewSet(viewsets.ViewSet):
+    def list(self, request):
+        instance = Product.objects.all()
+        serializer = ProductSerializers(instance, many = True, context = {"request":request})
+        return Response(serializer.data)
+    def retrieve(self, request, pk):
+        instance = Product.objects.get(id = pk)
+        serializer = ProductSerializers(instance, context = {"request":request})
+        return Response(serializer.data)
 class ProductListDetailApiView(APIView):
     permission_classes = [UserPermission]
     def get_queryset(self):
@@ -53,17 +61,17 @@ class ProductDeleteUpdateApiView(APIView):
         else:
             print(serializer.errors)
             return Response(serializer.error_messages)
-    def patch(self, request, pk):
-        instance = Product.objects.get(pk = pk)
-        serializer = ProductSerializers(instance, data = request.data, partial = True, context = {'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            print("Valid",serializer.validated_data)
+    # def patch(self, request, pk):
+    #     instance = Product.objects.get(pk = pk)
+    #     serializer = ProductSerializers(instance, data = request.data, partial = True, context = {'request': request})
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         print("Valid",serializer.validated_data)
 
-            return Response(serializer.data, status= status.HTTP_200_OK)
-        else:
-            print(serializer.errors)
-            return Response(serializer.validated_data)
+    #         return Response(serializer.data, status= status.HTTP_200_OK)
+    #     else:
+    #         print(serializer.errors)
+    #         return Response(serializer.validated_data)
 
     def delete(self, request, pk):
         instance = Product.objects.get(pk = pk)
