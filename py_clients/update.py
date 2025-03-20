@@ -11,8 +11,10 @@ print(login_response.json()['access'])
 
 if login_response.status_code == 200:
     access_code = login_response.json()['access']
-    endpoints = "http://127.0.0.1:8000/api/products/update/3/"
-    data = {"product_name": "Third brand patch" }
+    endpoints = "http://127.0.0.1:8000/api/v2/products/9/"
+    data ={'id': 9, 'seller': 'firstuser@gmail.com', 'discounted_price': 32.0, 'url': 'http://127.0.0.1:8000/api/v2/products/9/', 'product_name': 'Sixth Product', 
+           'brand': 'sixth Brand', 'description': 'sixth Description', 'price': '40.00', 
+           'discount_percentage': '20', 'category': 'men'}
     headers = {
         "Authorization": f"Bearer {access_code}" 
     }

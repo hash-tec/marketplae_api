@@ -33,52 +33,24 @@ class ProductViewSet(viewsets.ViewSet):
         instance = Product.objects.get(id = pk)
         serializer = ProductSerializers(instance, context = {"request":request})
         return Response(serializer.data)
-class ProductListDetailApiView(APIView):
-    permission_classes = [UserPermission]
-    def get_queryset(self):
-        return Product.objects.all()
-    
-    def get(self, request, pk = None):
-        if pk:
-            instance = Product.objects.get(id = pk)
-            serializer = ProductSerializers(instance, context = {"request":request})
-            return Response(serializer.data)
-        else:
-            instance = Product.objects.all()
-            serializer = ProductSerializers(instance, many = True,  context = {"request":request})
-            return Response(serializer.data)
- 
-class ProductDeleteUpdateApiView(APIView):
-    def put(self, request, pk):
-        instance = Product.objects.get(pk = pk)
-        print(request.data)
-    
-        serializer = ProductSerializers(instance, data = request.data, partial = True, context = {'request': request})
+    def update(self, request, pk):
+        instance = Product.objects.get(id = pk)
+        serializer = ProductSerializers(instance,request.data, context = {"request":request})
         if serializer.is_valid():
             serializer.save()
-            print("Valid",serializer.error_messages)
-            return Response(serializer.data, status= status.HTTP_200_OK)
-        else:
-            print(serializer.errors)
-            return Response(serializer.error_messages)
-    # def patch(self, request, pk):
-    #     instance = Product.objects.get(pk = pk)
-    #     serializer = ProductSerializers(instance, data = request.data, partial = True, context = {'request': request})
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         print("Valid",serializer.validated_data)
+            return Response(serializer.data)
+    def partial_update(self, request, pk):
+        instance = Product.objects.get(id = pk)
+        serializer = ProductSerializers(instance,request.data,partial = True, context = {"request":request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response({"message": "deleted"})
+    def destroy(self, request, pk):
+        instance = Product.objects.get(id = pk)
+        instance.delete()
+        return Response({"message": "deleted"})
 
-    #         return Response(serializer.data, status= status.HTTP_200_OK)
-    #     else:
-    #         print(serializer.errors)
-    #         return Response(serializer.validated_data)
-
-    def delete(self, request, pk):
-        instance = Product.objects.get(pk = pk)
-        if instance:
-            instance.delete()
-            return Response({"message": "Item delist "}, status = status.HTTP_200_OK)
-        
 class CategoryApiView(APIView):
     def get(self, request, *args, **kwargs):
         section = kwargs.get("category")
