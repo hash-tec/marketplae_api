@@ -10,7 +10,6 @@ from rest_framework import status, viewsets
 
 # Create your views here.
 class ProductListingApiView(APIView):
-    # permission_classes = [IsAuthenticated]
     def post(self, request):
         seller = self.request.user.email
         print(seller)
