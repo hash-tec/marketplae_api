@@ -3,7 +3,7 @@ from .models import Product
 from .serializers import ProductSerializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, DjangoModelPermissions
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
 from common.permissions import UserPermission
 from rest_framework import status, viewsets
 
@@ -25,6 +25,16 @@ class ProductListingApiView(APIView):
        
         
 class ProductViewSet(viewsets.ViewSet):
+    queryset = Product.objects.all()
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            return []
+        elif self.action in ["update", "partial_update"]:
+            return [UserPermission()]
+        elif self.action == "destroy":
+            return[UserPermission()]
+        else:
+            return[IsAuthenticated()]
     def list(self, request):
         instance = Product.objects.all()
         serializer = ProductSerializers(instance, many = True, context = {"request":request})
@@ -39,13 +49,14 @@ class ProductViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        
     def partial_update(self, request, pk):
-        instance = Product.objects.get(id = pk)
-        serializer = ProductSerializers(instance,request.data,partial = True, context = {"request":request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response({"message": "deleted"})
+            instance = Product.objects.get(id = pk)
+            serializer = ProductSerializers(instance,request.data, context = {"request":request})
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+
     def destroy(self, request, pk):
         instance = Product.objects.get(id = pk)
         instance.delete()
