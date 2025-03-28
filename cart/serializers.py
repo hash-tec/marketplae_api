@@ -64,8 +64,4 @@ class AllCartSerializer(serializers.ModelSerializer):
     def get_date_created(self, obj):
         return obj.product.date_created
 
-    def create(self, request, validated_data):
-        request = self.context.get("request")
-        validated_data["owner"] = request.user
-        return super().create(validated_data)
     

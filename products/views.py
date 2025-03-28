@@ -8,7 +8,7 @@ from common.permissions import UserPermission
 from rest_framework import status, viewsets
 # Create your views here.
 
-#ProductListingApiView allows the creation of an item by creating an instance of the Product models
+''' ProductListingApiView allows the creation of an item by creating an instance of the Product models'''
 class ProductListingApiView(APIView):
     def post(self, request):
         serializer = ProductSerializers(data = request.data, context = {"request":request}) 
