@@ -7,6 +7,7 @@ from .serializers import CartSerializer, AllCartSerializer
 from products.serializers import ProductSerializers
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 # from common.permissions
 # Create your views here.
 
@@ -15,6 +16,7 @@ from rest_framework import status
     - 'cart' variable filter out instance that belongs to the current logged in user from the cart items 
     - conditional block is placed to handle error if the user does not have any item in the cart'''
 class AllCartApiView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         user = Cart.objects.get(user = request.user)
         cart = CartItem.objects.filter(owner = user)
@@ -25,6 +27,7 @@ class AllCartApiView(APIView):
 
 '''CartApiView adds product to the user cart'''
 class CartApiView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request,  *args, **kwargs):
         '''
         product_id extract the dynamic value from the url
@@ -55,6 +58,7 @@ class CartApiView(APIView):
     
 '''AddItemApiView functions with the frontend button to add the item from the from the cart page '''
 class AddItemApiView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request,  *args, **kwargs):
         cart_id = kwargs.get("pk")
         cart = CartItem.objects.get(id = cart_id )
@@ -64,6 +68,7 @@ class AddItemApiView(APIView):
 
 '''RemoveItemApiView functions with the frontend button to reduce the item from the from the cart page '''
 class RemoveItemApiView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request,  *args, **kwargs):
         cart_id = kwargs.get("pk")
         cart = CartItem.objects.get( id = cart_id )
