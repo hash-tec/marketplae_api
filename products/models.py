@@ -17,10 +17,15 @@ class Product(models.Model):
           ("Woman Pants", "Woman Pants"), ("Skirts", "skirts"), ("Bags", "Bags"),
           ("High Heels", "High Heels"), ("Bikini", "Bikini")))
     ]
+    size_choice = (
+                    ("x", "X"), ("xl", "XL"), 
+                    ("xxl", "XXL"), ("3xl", "3XL"))
+    
     seller = models.ForeignKey( Customer, on_delete=models.CASCADE, verbose_name=_("Seller"))
     product_name = models.CharField(_("Product Name"), max_length=200)
     brand = models.CharField(_("Brand"), max_length=50, blank=False)
     description = models.TextField(_("Description"), blank=False)
+    size = models.CharField(_("Size"), choices=size_choice, max_length=50, null = True)
     price = models.DecimalField(_("Price"), max_digits=10, decimal_places=2, blank=False )
     discount_percentage= models.DecimalField(_("Discount Percentage"), max_digits=10, decimal_places=0, null=True, blank=True)
     category =  models.CharField(_("Category"), choices=category_choice, max_length=50, null = True )
