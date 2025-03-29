@@ -11,7 +11,18 @@ from rest_framework.permissions import IsAuthenticated
 # from common.permissions
 # Create your views here.
 
+'''
+    CartViewset handles all the request going through the cart endpoint
+    functions:
+        get_permissions: Handles the the action which can be perform according to the request method
+        list: Get all the items that has been added to the logged in user cart
+        post: Handles the how ta product listing is added to the user quantity
+            - cart_owner:checks if the user has previously added an item to cart, regardless if the cart is empty at the time,
+              the Cart model will still have the instance of the user
+            - try block: checks if the the item has been previously added to the cart, if True it adds to the quantity of the product
+            - except block: if the item is yet to be added t the cart, adds the item to the cart
 
+'''
 class CartViewset(ViewSet):
     def get_permissions(self):
         if self.action == 'list':
@@ -28,25 +39,17 @@ class CartViewset(ViewSet):
         return Response({"message":"Your cart is empty"}, status=status.HTTP_204_NO_CONTENT)
     
     def post(self, request,  *args, **kwargs):
-        '''
-        product_id extract the dynamic value from the url
-        cart_owner get if the logged in user exist in the Cart model and create for a new user
-        product uses product_id to fetch the product which is being added to the cart
-        try block:
-            fetches the product where the product and owner field are the same with the product and cart_owner variable 
-            if conditions are meant, the quantity of the product increases rather than creating a new instance of same product
-        except block:
-            if the product has not been added it create new instance for the product in the cartItem model
-        '''
+
+        # product_id extract the dynamic value from the url with the identifier PK
         product_id  = kwargs.get("pk")
+        # checks for the logged in user if it has an instance in the cart, if False, it create new instance for the user 
         cart_owner, created = Cart.objects.get_or_create(user= request.user)
         product = Product.objects.get(id = product_id)
         try:
             cart = CartItem.objects.get(owner = cart_owner, product = product )
             serializer = CartSerializer(cart, request.data)
-            if cart:
-                cart.quantity +=1
-                cart.save()
+            cart.quantity +=1
+            cart.save()
         except CartItem.DoesNotExist:
             cart = CartItem.objects.create(owner = cart_owner, product = product)
             serializer = CartSerializer(cart, request.data)
