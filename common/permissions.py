@@ -1,5 +1,4 @@
-from rest_framework.permissions import BasePermission, DjangoModelPermissions, SAFE_METHODS, IsAdminUser
-from rest_framework.response import Response
+from rest_framework.permissions import BasePermission
 class UserPermission(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated
@@ -8,6 +7,13 @@ class UserPermission(BasePermission):
     def has_object_permission(self, request, view, obj):
         return request.user == obj.seller
     
+
+# class CartPermission(BasePermission):
+#     def has_permission(self, request, view):
+#         if request.method == 'put':
+#             return False
+#         else:
+#             True
 
 
 

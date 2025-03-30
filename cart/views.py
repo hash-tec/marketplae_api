@@ -7,30 +7,26 @@ from .serializers import CartSerializer, AllCartSerializer
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
+
 from rest_framework.permissions import IsAuthenticated
-# from common.permissions
+from rest_framework.exceptions import PermissionDenied
 # Create your views here.
 
 '''
-    CartViewset handles all the request going through the cart endpoint
+    CartApiView handles all the request going through the cart endpoint
     functions:
-        get_permissions: Handles the the action which can be perform according to the request method
-        list: Get all the items that has been added to the logged in user cart
-        post: Handles the how ta product listing is added to the user quantity
+            get: Get all the items that has been added to the logged in user cart
+            post: Handles the how ta product listing is added to the user quantity
+            patch: Increase or decrease the quantity of the product based of the action passed, the client is expected to pass Increase or Decrease
             - cart_owner:checks if the user has previously added an item to cart, regardless if the cart is empty at the time,
               the Cart model will still have the instance of the user
             - try block: checks if the the item has been previously added to the cart, if True it adds to the quantity of the product
             - except block: if the item is yet to be added t the cart, adds the item to the cart
 
 '''
-class CartViewset(ViewSet):
-    def get_permissions(self):
-        if self.action == 'list':
-            return []
-        elif self.action == 'partial_update':
-            return [IsAuthenticated()]
-        return super().get_permissions()
-    def list(self, request):
+class CartApiView(APIView):
+    permission_classes = [IsAuthenticated ]
+    def get(self, request, *args, **kwargs):
         user = Cart.objects.get(user = request.user)
         cart = CartItem.objects.filter(owner = user)
         if cart.exists():
@@ -38,10 +34,10 @@ class CartViewset(ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"message":"Your cart is empty"}, status=status.HTTP_204_NO_CONTENT)
     
-    def post(self, request,  *args, **kwargs):
+    def post(self, request, pk):
 
         # product_id extract the dynamic value from the url with the identifier PK
-        product_id  = kwargs.get("pk")
+        product_id  = pk
         # checks for the logged in user if it has an instance in the cart, if False, it create new instance for the user 
         cart_owner, created = Cart.objects.get_or_create(user= request.user)
         product = Product.objects.get(id = product_id)
@@ -53,14 +49,13 @@ class CartViewset(ViewSet):
         except CartItem.DoesNotExist:
             cart = CartItem.objects.create(owner = cart_owner, product = product)
             serializer = CartSerializer(cart, request.data)
-            return Response(serializer.data)
        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({"message": "Invalid"}, status = status.HTTP_400_BAD_REQUEST)
 
-    def partial_update(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs):
         action = request.data.get("action", "increase")
         if action == "increase":
             cart_id = kwargs.get("pk")
@@ -80,3 +75,8 @@ class CartViewset(ViewSet):
             return Response(reverse('cart', request=request), status=status.HTTP_200_OK)
         else:
             return Response (status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, *args, **kwargs):
+        cart_id = kwargs.get("pk")
+        cart = CartItem.objects.get(id = cart_id )
+        cart.delete()
+        return Response({"message": "Item Removed"}, status=status.HTTP_200_OK)
