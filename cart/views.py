@@ -7,7 +7,6 @@ from .serializers import CartSerializer, AllCartSerializer
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
-
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 # Create your views here.
@@ -25,6 +24,7 @@ from rest_framework.exceptions import PermissionDenied
 
 '''
 class CartApiView(APIView):
+
     permission_classes = [IsAuthenticated ]
     def get(self, request, *args, **kwargs):
         user = Cart.objects.get(user = request.user)
@@ -80,3 +80,6 @@ class CartApiView(APIView):
         cart = CartItem.objects.get(id = cart_id )
         cart.delete()
         return Response({"message": "Item Removed"}, status=status.HTTP_200_OK)
+    
+class CouponApiView(APIView):
+    pass

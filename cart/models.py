@@ -19,8 +19,5 @@ class CartItem(models.Model):
     def __str__(self):
         return f"{self.product.product_name} {self.quantity}"
     
-class Coupon(models.Model):
-    coupon_name = models.CharField(max_length = 150)
-    percentage_off = models.IntegerField()
-    date_created = models.DateTimeField(auto_now_add=True)
+
 

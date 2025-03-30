@@ -6,6 +6,7 @@ from django.utils.text import slugify
 
 # Create your models here.
 class Product(models.Model):
+
     category_choice =[
         ("Man Fashion",(
          ("Man Shirt", "Man T-Shirt"),("Man Shoes", "Man Shoes"),
@@ -47,3 +48,5 @@ class Product(models.Model):
 
     def str(self):
         return self.product_name
+    
+
