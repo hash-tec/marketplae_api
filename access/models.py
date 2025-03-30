@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
-from django.utils import timezone
 from .manager import UserManager
 
 # Create your models here.
@@ -18,7 +17,7 @@ class Customer(AbstractUser):
     gender = models.CharField(_("Gender"), max_length=1, choices=gender_choice)
     phone_number = models.CharField(_("Phone Number"), max_length=15, unique=True, blank=True, null= True )
     address = models.CharField(_("Address"), max_length=250, null=True, blank = True)
-    date_joined = models.DateField(_("Date Joined"), default= timezone.now)
+    date_joined = models.DateField(_("Date Joined"), auto_now_add=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

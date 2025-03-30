@@ -13,8 +13,8 @@ class Cart(models.Model):
              return f"{self.user}"
 class CartItem(models.Model):
     owner = models.ForeignKey( Cart, on_delete=models.CASCADE, verbose_name=_("Seller"))
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
-    quantity = models.IntegerField(_("Quantity"), null=True, default=1)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(_("Quantity"), default=1)
 
     def __str__(self):
         return f"{self.product.product_name} {self.quantity}"

@@ -26,12 +26,12 @@ class Product(models.Model):
     product_name = models.CharField(_("Product Name"), max_length=200)
     brand = models.CharField(_("Brand"), max_length=50, blank=False)
     description = models.TextField(_("Description"), blank=False)
-    size = models.CharField(_("Size"), choices=size_choice, max_length=50, null = True)
+    size = models.CharField(_("Size"), choices=size_choice, max_length=50)
     price = models.DecimalField(_("Price"), max_digits=10, decimal_places=2, blank=False )
     discount_percentage= models.DecimalField(_("Discount Percentage"), max_digits=10, decimal_places=0, null=True, blank=True)
-    category =  models.CharField(_("Category"), choices=category_choice, max_length=50, null = True )
+    category =  models.CharField(_("Category"), choices=category_choice, max_length=50 )
     image = models.FileField(_("Image"), upload_to="items_images", null=True)
-    slug = models.SlugField(default="", null=True)
+    slug = models.SlugField()
     date_created = models.DateField(auto_now_add=True)
 
     def get_discounted_price(self):
