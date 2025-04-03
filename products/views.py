@@ -6,18 +6,24 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
 from common.permissions import UserPermission
 from rest_framework import status, viewsets
+from coupons.serializers import CouponSerializers
 # Create your views here.
 
 ''' ProductListingApiView allows the creation of an item by creating an instance of the Product models'''
 class ProductListingApiView(APIView):
     def post(self, request):
-        serializer = ProductSerializers(data = request.data, context = {"request":request}) 
-
+        product_data = request.data.get("product_data")
+        coupon_data = request.data.get("coupon_data")
+        serializer = ProductSerializers(data = product_data, context = {"request":request}) 
+        coupon_serializer= CouponSerializers(data = coupon_data,context = {"request":request})
+        coupon_data['coupon_name'] = "Product coupon"
+        if coupon_serializer.is_valid():
+            coupon_serializer.save()
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({"data":serializer.data, "error":serializer.errors},status=status.HTTP_201_CREATED)
         else: 
-            return Response({"message": "Error listing your item"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Error listing your item", "error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
        
         
 '''ProductViewSet handles the CRUD operations using viewset and routers'''

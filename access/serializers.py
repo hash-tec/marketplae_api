@@ -12,7 +12,12 @@ class RegisterUserSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({"password2": "Passwords must match"})
             return data
         
-    def create(self, validated_data):
+    def create(self, validated_data, data):
+        if data['password'] != data["password2"]:
+            raise serializers.ValidationError({"password2": "Passwords must match"})
+        else:
             validated_data.pop("password2")
             user = Customer.objects.create_user(**validated_data)
             return user
+        
+        

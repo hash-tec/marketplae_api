@@ -6,5 +6,6 @@ from .models import Product
 class ProductsAdmin(admin.ModelAdmin):
     list_display = ["product_name"]
     prepopulated_fields = {"slug":("product_name", )}
+    ordering =['-date_created']
     
 admin.site.register(Product, ProductsAdmin)

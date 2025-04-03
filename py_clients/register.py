@@ -3,6 +3,7 @@ from getpass import getpass
 
 email= input("What is your email?\n")
 password = getpass("Your password?\n")
+password2 = getpass("Confirm password\n")
 
 register_endpoints = "http://127.0.0.1:8000/api/register/"
 
