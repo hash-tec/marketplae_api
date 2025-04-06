@@ -19,5 +19,7 @@ class CouponSerializers(serializers.ModelSerializer):
         validated_data['code'] = ''.join(choices( ascii_uppercase + digits, k=7))
         if validated_data['coupon_name'].lower()== "product coupon":
             validated_data['identifier'] = "PC"
+        elif validated_data['coupon_name'].lower()== "new user coupon":
+            validated_data['identifier'] = "NUC"
         return super().create(validated_data)
     

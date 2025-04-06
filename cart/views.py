@@ -27,10 +27,10 @@ class CartApiView(APIView):
 
     permission_classes = [IsAuthenticated ]
     def get(self, request, *args, **kwargs):
-        user = Cart.objects.get(user = request.user)
+        user, created = Cart.objects.get_or_create(user = request.user)
         cart = CartItem.objects.filter(owner = user)
         if cart.exists():
-            serializer = AllCartSerializer(cart, many = True)
+            serializer = AllCartSerializer(cart, many = True, context = {"request": request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"message":"Your cart is empty"}, status=status.HTTP_204_NO_CONTENT)
     
@@ -81,5 +81,12 @@ class CartApiView(APIView):
         cart.delete()
         return Response({"message": "Item Removed"}, status=status.HTTP_200_OK)
     
+class heckout(APIView):
+    def get(self, request):
+        pass
+
+
+
+
 class CouponApiView(APIView):
     pass

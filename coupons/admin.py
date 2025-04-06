@@ -3,4 +3,7 @@ from .models import Coupon
 
 # Register your models here.
 
-admin.site.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+    list_display = ['id', 'code', 'identifier']
+
+admin.site.register(Coupon, CouponAdmin)
