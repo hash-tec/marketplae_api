@@ -4,11 +4,11 @@ from products.models import Product
 from rest_framework.views import APIView
 from rest_framework.reverse import reverse
 from .serializers import CartSerializer, AllCartSerializer
-from rest_framework.viewsets import ViewSet
+from access.models import Customer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import PermissionDenied
+
 # Create your views here.
 
 '''
@@ -81,9 +81,6 @@ class CartApiView(APIView):
         cart.delete()
         return Response({"message": "Item Removed"}, status=status.HTTP_200_OK)
     
-class heckout(APIView):
-    def get(self, request):
-        pass
 
 
 

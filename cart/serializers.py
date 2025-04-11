@@ -63,12 +63,9 @@ class AllCartSerializer(serializers.ModelSerializer):
     def get_discount_percentage(self, obj):
         return obj.product.discount_percentage
     def get_total_price(self, obj):
-        if obj.product.discount_percentage:
-            discount = obj.product.price *  Decimal(obj.product.discount_percentage / 100)
-            amount = obj.product.price - discount
-            total_amount = amount * obj.quantity
-            return total_amount
-    def get_cart_amount(self, obj):
+        total_amount = obj.product.price * obj.quantity
+        return total_amount
+    def get_cart_amount(self):
         user = self.context["request"].user
         user_cart = Cart.objects.get(user = user)
         cart = CartItem.objects.filter(owner = user_cart).aggregate(cart_amount = Sum(F('product__price') * F('quantity')))['cart_amount']
