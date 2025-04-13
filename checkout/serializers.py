@@ -9,11 +9,12 @@ class CheckoutSerializer(serializers.ModelSerializer):
     price =  serializers.SerializerMethodField(read_only =True )
     discount_percentage= serializers.SerializerMethodField(read_only =True )
     total_price = serializers.SerializerMethodField(read_only = True)
-    checkout_amount = serializers.SerializerMethodField(read_only = True)
+
+
     # image =  serializers.SerializerMethodField(read_only =True )
     class Meta:
         model = CartItem
-        fields = ["id", "product_name", "brand", "price", "discount_percentage","quantity","total_price", "checkout_amount"]
+        fields = ["id", "product_name", "brand", "price", "discount_percentage","quantity","total_price",  ]
 
     
     def get_product_name(self, obj):
@@ -32,16 +33,13 @@ class CheckoutSerializer(serializers.ModelSerializer):
             amount = obj.product.price - discount
             total_amount = amount * obj.quantity
             return total_amount
-    def get_checkout_amount(self, obj):
-        user = self.context["request"].user
-        user_cart = Cart.objects.get(user = user)
-        cart = CartItem.objects.filter(owner = user_cart).aggregate(total_amount = Sum(F('product__price') * F('quantity')))["total_amount"]
-        return cart
+
+# class ProfileSerializer(serializers.ModelSerializer):
+
+
+#     class Meta:
+#         model = Cart
     
-    # def get_image(self, obj):
-    #     return obj.product.image
-    def get_date_created(self, obj):
-        return obj.product.date_created
 
     
     

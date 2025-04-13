@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import CheckoutApiView
+from . import views
 
 urlpatterns = [
-    path('',CheckoutApiView.as_view() )
+    path('',views.CheckoutApiView.as_view() ),
+    path('address/',views.ShippingAddress.as_view() )
 ]

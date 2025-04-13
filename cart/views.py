@@ -85,5 +85,3 @@ class CartApiView(APIView):
 
 
 
-class CouponApiView(APIView):
-    pass

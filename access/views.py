@@ -2,12 +2,11 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from coupons.serializers import CouponSerializers, Coupon
+
 
 # Create your views here.
-from .models import Customer
-from .serializers import RegisterUserSerializer
+from .models import Address
+from .serializers import RegisterUserSerializer, AddAddressSerializer
 
 class RegisterUserApiView(APIView):
     def post(self, request, *args, **kwargs):
@@ -15,4 +14,18 @@ class RegisterUserApiView(APIView):
         if Serializer.is_valid():
              Serializer.save()
         return Response(Serializer.data)
+
+
+class AddAddressApiView(APIView):
+    def post(self, request):
+        user = request.user
+        serializer = AddAddressSerializer(data = request.data, context = {"request":request})
+        if serializer.is_valid():
+            address_entries = Address.objects.filter(customer = user).count()
+            if address_entries == 3:
+                return Response ("You can only have three shipping address", status=status.HTTP_400_BAD_REQUEST)
+            else:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+       
     

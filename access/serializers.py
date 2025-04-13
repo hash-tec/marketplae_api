@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Customer
+from .models import Customer, Address
 class RegisterUserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only = True)
     class Meta:
@@ -19,5 +19,17 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         validated_data.pop("password2")
         user = Customer.objects.create_user(**validated_data)
         return user
-        
+    
+class AddAddressSerializer(serializers.ModelSerializer):
+     
+    class Meta:
+          model = Address
+          exclude = ("customer",)
+          
+    def save(self, validated_data = None):
+        if validated_data is None:
+             validated_data = self.validated_data
+        request = self.context.get("request")
+        validated_data['customer'] = request.user
+        return super().create(validated_data)
         
