@@ -29,6 +29,6 @@ urlpatterns = [
     path('api/', include('common.routers')),
     path('api/' , include('cart.urls')),
     path('api/checkout/', include('checkout.urls')),
-
+    path('api/review/', include('review.urls')),
 
 ]

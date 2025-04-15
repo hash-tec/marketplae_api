@@ -24,7 +24,7 @@ class AddAddressSerializer(serializers.ModelSerializer):
      
     class Meta:
           model = Address
-          exclude = ("customer",)
+          exclude = ("customer","id")
           
     def save(self, validated_data = None):
         if validated_data is None:

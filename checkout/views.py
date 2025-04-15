@@ -4,8 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import CheckoutSerializer
 from cart.models import Cart, CartItem
-from coupons.models import Coupon
+from access.serializers import AddAddressSerializer
 from django.db.models import Sum, F
+
 # Create your views here.
 class CheckoutApiView(APIView):
     def get(self, request):
@@ -32,6 +33,11 @@ class CheckoutApiView(APIView):
 
 class ShippingAddress(APIView):
     def get(self, request):
-        user = request.self
-        user_address = Address.objects.filter(Customer = user)
-        
+        user = request.user
+        phone_no = request.user.phone_number
+        print(phone_no)
+        user_address = Address.objects.filter(customer = user)
+        serializer = AddAddressSerializer(user_address, many= True)
+        return Response({"addresses":serializer.data, "number": phone_no})
+    def post(self, request):
+        pass

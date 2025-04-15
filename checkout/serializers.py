@@ -39,6 +39,8 @@ class CheckoutSerializer(serializers.ModelSerializer):
 
 #     class Meta:
 #         model = Cart
+# class ShippingAddressSerializer(serializers.ModelSerializer):
+
     
 
     
