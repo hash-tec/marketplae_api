@@ -5,17 +5,17 @@ class RegisterUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ["id","first_name","last_name", "email","password", "password2", "gender"]
+        #extra_kwargs changes the field to being a write only field
         extra_kwargs = {"password":{'write_only': True}}
 
+
+    #validate the password against  
     def validate(self, data):
-            if data['password'] != data["password2"]:
-                raise serializers.ValidationError({"password2": "Passwords must match"})
+            if data['password2'] != data["password"]:
+                raise serializers.ValidationError("Passwords doesn't match")
             return data
         
     def create(self, validated_data):
-        # if data['password'] != data["password2"]:
-        #     raise serializers.ValidationError({"password2": "Passwords must match"})
-        # else:
         validated_data.pop("password2")
         user = Customer.objects.create_user(**validated_data)
         return user

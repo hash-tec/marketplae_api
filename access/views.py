@@ -10,10 +10,10 @@ from .serializers import RegisterUserSerializer, AddAddressSerializer
 
 class RegisterUserApiView(APIView):
     def post(self, request, *args, **kwargs):
-        Serializer = RegisterUserSerializer(data = request.data)
-        if Serializer.is_valid():
-             Serializer.save()
-        return Response(Serializer.data)
+        serializer = RegisterUserSerializer(data = request.data)
+        if serializer.is_valid():
+             serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class AddAddressApiView(APIView):

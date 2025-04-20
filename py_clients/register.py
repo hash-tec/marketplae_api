@@ -7,7 +7,7 @@ email= input("What is your email?\n")
 password = getpass("Your password?\n")
 password2 = getpass("Confirm password\n")
 register_data= {"first_name": "First", "last_name": "person", 
-     "email":email,"password": password,"password2":password, "gender":"M"}
+     "email":email,"password": password,"password2":password2, "gender":"M"}
 register_response = requests.post(register_endpoints, json=register_data)
 print(register_response.json())
 

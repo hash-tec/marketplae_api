@@ -34,6 +34,10 @@ class Product(models.Model):
     slug = models.SlugField()
     date_created = models.DateField(auto_now_add=True)
 
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.product_name)
+        super().save(*args, **kwargs)
     def get_discounted_price(self):
         if self.discount_percentage:
             discount = (float(self.discount_percentage) / 100) * float(self.price)
@@ -42,13 +46,7 @@ class Product(models.Model):
         else:
             return("Discount is NIL")
 
-    def save(self, *args, **kwargs):
-        if self.discount_percentage:
-            discount = (float(self.discount_percentage) / 100) * float(self.price)
-            calc_discount = round(float(self.price)- discount, 2)
-            self.price = calc_discount
-        self.slug = slugify(self.product_name)
-        super().save(*args, **kwargs)
+
 
     def str(self):
         return self.product_name

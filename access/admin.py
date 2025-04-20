@@ -27,5 +27,7 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(Customer, CustomUserAdmin)
 
-admin.site.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display= ['full_name', 'label', 'address']
+admin.site.register(Address, AddressAdmin)
 

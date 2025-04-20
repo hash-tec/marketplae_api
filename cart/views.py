@@ -8,6 +8,7 @@ from access.models import Customer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.core.exceptions import ValidationError
 
 # Create your views here.
 
@@ -35,26 +36,33 @@ class CartApiView(APIView):
         return Response({"message":"Your cart is empty"}, status=status.HTTP_204_NO_CONTENT)
     
     def post(self, request, pk):
-
-        # product_id extract the dynamic value from the url with the identifier PK
-        product_id  = pk
         # checks for the logged in user if it has an instance in the cart, if False, it create new instance for the user 
         cart_owner, created = Cart.objects.get_or_create(user= request.user)
-        product = Product.objects.get(id = product_id)
         try:
-            cart = CartItem.objects.get(owner = cart_owner, product = product )
-            serializer = CartSerializer(cart, request.data)
-            cart.quantity +=1
-            cart.save()
-        except CartItem.DoesNotExist:
-            cart = CartItem.objects.create(owner = cart_owner, product = product)
-            serializer = CartSerializer(cart, request.data)
-       
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response({"message": "Invalid"}, status = status.HTTP_400_BAD_REQUEST)
+            product = Product.objects.get(id = pk)
+        except:
+            raise ValidationError("product id not found")
+        else:
+            try:
+                cart = CartItem.objects.get(owner = cart_owner, product = product )
+                serializer = CartSerializer(cart, request.data)
+                cart.quantity +=1
+                cart.save()
 
+            except CartItem.DoesNotExist:
+                cart = CartItem.objects.create(owner = cart_owner, product = product)
+                serializer = CartSerializer(cart, request.data)
+            else:
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response({"message": "Invalid"}, status = status.HTTP_400_BAD_REQUEST)
+
+    '''
+        This patch request is to increase an item quantity in a cart with the + and - button, for it to work, either increase
+        or decrease has to be passed into the data being passed for the request.
+    
+    '''
     def patch(self, request, *args, **kwargs):
         action = request.data.get("action", "increase")
         if action == "increase":
@@ -66,9 +74,7 @@ class CartApiView(APIView):
         elif action == "decrease":
             cart_id = kwargs.get("pk")
             cart = CartItem.objects.get( id = cart_id )
-            print(cart.quantity)
             cart.quantity -= 1
-            print("after", cart.quantity)
             cart.save()
             if cart.quantity < 1:
                 cart.delete() 

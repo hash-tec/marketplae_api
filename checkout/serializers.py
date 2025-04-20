@@ -34,12 +34,6 @@ class CheckoutSerializer(serializers.ModelSerializer):
             total_amount = amount * obj.quantity
             return total_amount
 
-# class ProfileSerializer(serializers.ModelSerializer):
-
-
-#     class Meta:
-#         model = Cart
-# class ShippingAddressSerializer(serializers.ModelSerializer):
 
     
 

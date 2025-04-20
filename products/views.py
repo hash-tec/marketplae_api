@@ -12,7 +12,7 @@ from coupons.serializers import CouponSerializers
 ''' ProductListingApiView allows the creation of an item by creating an instance of the Product models'''
 class ProductListingApiView(APIView):
     def post(self, request):
-        product_data = request.data.get("product_data")
+        product_data = request.data
         serializer = ProductSerializers(data = product_data, context = {"request":request}) 
         if serializer.is_valid():
             serializer.save()
@@ -47,7 +47,7 @@ class ProductViewSet(viewsets.ViewSet):
         return Response(serializer.data)
     def update(self, request, pk):
         instance = Product.objects.get(id = pk)
-        serializer = ProductSerializers(instance,request.data, context = {"request":request})
+        serializer = ProductSerializers(instance, request.data, context = {"request":request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -74,7 +74,7 @@ class ProductViewSet(viewsets.ViewSet):
 class CategoryApiView(APIView):
     def get(self, request, *args, **kwargs):
         section = kwargs.get("category")
-        choice =[item[0] for item in Product.category_choice]
+        choice =[category[0] for category in Product.category_choice]
         if not section in choice:
             return Response({"message": "Invalid category"}, status=status.HTTP_404_NOT_FOUND)
         else:

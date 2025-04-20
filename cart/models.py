@@ -11,6 +11,8 @@ class Cart(models.Model):
 
         def __str__(self):
              return f"{self.user}"
+
+
 class CartItem(models.Model):
     owner = models.ForeignKey( Cart, on_delete=models.CASCADE, verbose_name=_("Seller"))
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

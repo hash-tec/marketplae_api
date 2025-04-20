@@ -38,5 +38,10 @@ class Address(models.Model):
     postal_code = models.CharField(max_length=20)
     country = models.CharField(max_length=100)
 
+    def full_name(self):
+        return self.customer.get_full_name()
+    
+    def address(self):
+        return self.street_address, self.city, self.state, self.country
     class Meta:
         verbose_name_plural = "Addresses"

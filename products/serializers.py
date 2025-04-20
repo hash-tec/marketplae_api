@@ -11,6 +11,9 @@ class ProductSerializers(serializers.ModelSerializer):
         model = Product
         exclude = ("slug", "date_created", 'image')
 
+
+   
+   
     def get_discounted_price(self, obj):
         return obj.get_discounted_price()
      
