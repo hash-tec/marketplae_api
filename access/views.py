@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .permissions import AuthorEditAddressOnly
+from common.permissions import AuthorEditOnly
 
 
 # Create your views here.
@@ -19,7 +19,7 @@ class RegisterUserApiView(APIView):
 
 
 class AddressApiView(APIView):
-    permission_classes = [AuthorEditAddressOnly]
+    permission_classes = [AuthorEditOnly]
     def post(self, request):
         user = request.user
         serializer = AddressSerializer(data = request.data, context = {"request":request})

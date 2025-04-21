@@ -65,7 +65,7 @@ class AllCartSerializer(serializers.ModelSerializer):
     def get_total_price(self, obj):
         total_amount = obj.product.price * obj.quantity
         return total_amount
-    def get_cart_amount(self):
+    def get_cart_amount(self, obj):
         user = self.context["request"].user
         user_cart = Cart.objects.get(user = user)
         cart = CartItem.objects.filter(owner = user_cart).aggregate(cart_amount = Sum(F('product__price') * F('quantity')))['cart_amount']
