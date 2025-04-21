@@ -20,11 +20,11 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         user = Customer.objects.create_user(**validated_data)
         return user
     
-class AddAddressSerializer(serializers.ModelSerializer):
+class AddressSerializer(serializers.ModelSerializer):
      
     class Meta:
           model = Address
-          exclude = ("customer","id")
+          exclude = ("customer","id",)
           
     def save(self, validated_data = None):
         if validated_data is None:

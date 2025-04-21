@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import CheckoutSerializer
 from cart.models import Cart, CartItem
-from access.serializers import AddAddressSerializer
+from access.serializers import AddressSerializer
 from django.db.models import Sum, F
 from rest_framework.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
@@ -43,7 +43,7 @@ class ShippingAddress(APIView):
         except:
             return Response({"user_cart_error":"User does not have available cart"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            serializer = AddAddressSerializer(user_address, many= True)
+            serializer = AddressSerializer(user_address, many= True)
             return Response({"addresses":serializer.data, "number": phone_no})
     def post(self, request):
         pass

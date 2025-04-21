@@ -2,11 +2,13 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .permissions import AuthorEditAddressOnly
 
 
 # Create your views here.
 from .models import Address
-from .serializers import RegisterUserSerializer, AddAddressSerializer
+from .serializers import RegisterUserSerializer, AddressSerializer
 
 class RegisterUserApiView(APIView):
     def post(self, request, *args, **kwargs):
@@ -16,10 +18,11 @@ class RegisterUserApiView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class AddAddressApiView(APIView):
+class AddressApiView(APIView):
+    permission_classes = [AuthorEditAddressOnly]
     def post(self, request):
         user = request.user
-        serializer = AddAddressSerializer(data = request.data, context = {"request":request})
+        serializer = AddressSerializer(data = request.data, context = {"request":request})
         if serializer.is_valid():
             address_entries = Address.objects.filter(customer = user).count()
             if address_entries == 3:
@@ -27,5 +30,21 @@ class AddAddressApiView(APIView):
             else:
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get(self, request, pk = None):
+        if pk is None:
+            user = request.user
+            instance = Address.objects.filter(customer = user)
+            serializer = AddressSerializer(instance, many = True)
+            return Response(serializer.data)
+        else:
+            user = request.user
+            instance = Address.objects.get(id = pk)
+            serializer = AddressSerializer(instance)
+            return Response(serializer.data)
+        
+    def delete(self, request, pk):
+        instance = Address.objects.get(id = pk)
+        instance.delete()
+        return Response("Address has been deleted")
        
     

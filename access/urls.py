@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('register/', views.RegisterUserApiView.as_view(), name = "register"),
-    path('add-address/',views.AddAddressApiView.as_view() )
+    path('address/',views.AddressApiView.as_view() ),
+    path('address/<int:pk>/',views.AddressApiView.as_view() ),
 ]
