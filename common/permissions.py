@@ -41,7 +41,17 @@ class CartPermission(BasePermission):
             return False
         return True
 
+class ReviewPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return True
+        elif not request.user.is_authenticated and request.method == 'GET':
+            return True
+        return False
+    
+    def has_object_permission(self, request, view, obj):
+        if request.user != obj.owner:
+            return False
+        return True
 
 
-
-# class CartPermission

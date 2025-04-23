@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Review(models.Model):
     # product_id = models.IntegerField()
-    reviewer = models.CharField(_("Reviewer"), max_length=100)
+    reviewer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     comment = models.TextField()
     rating = models.IntegerField(default = 0)

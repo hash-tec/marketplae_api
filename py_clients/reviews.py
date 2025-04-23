@@ -11,7 +11,7 @@ print(login_response.json()['access'])
 
 if login_response.status_code == 200:
     access_code = login_response.json()['access']
-    endpoints = "http://127.0.0.1:8000/api/review/2/"
+    endpoints = "http://127.0.0.1:8000/api/review/1/"
     data = {'comment': 'nice product', 'rating': 3}
     headers = {
         "Authorization": f"Bearer {access_code}" 

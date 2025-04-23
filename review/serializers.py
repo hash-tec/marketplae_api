@@ -13,9 +13,14 @@ class ReviewSerializers(serializers.ModelSerializer):
         if value < 1 or value > 5:
             raise serializers.ValidationError("Rating is between 1 and 5")
         return value
-
+    def save(self, validated_data= None): 
+        if validated_data is None:
+            validated_data = self.validated_data
+        request = self.context.get('request')
+        validated_data['reviewer'] = request.user
+        return super().create(validated_data)
 class AllReviewsSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        exclude = ['id']
+        fields = "__all__"
