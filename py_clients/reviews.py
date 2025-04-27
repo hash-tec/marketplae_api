@@ -1,23 +1,11 @@
 import requests
 from getpass import getpass
-
-
-username = input("What is your email? \n")
-password = getpass("What is your password? \n")
-login_endpoint = "http://127.0.0.1:8000/api/token/"
-login_response = requests.post(login_endpoint, json={"email":username, "password": password})
-print(login_response.json()['access'])
-
-
-if login_response.status_code == 200:
-    access_code = login_response.json()['access']
-    endpoints = "http://127.0.0.1:8000/api/review/1/"
-    data = {'comment': 'nice product', 'rating': 3}
-    headers = {
-        "Authorization": f"Bearer {access_code}" 
-    }
-    get_response = requests.post(endpoints, json=data, headers=headers)
-    print(get_response.json())
+from login import login
+endpoints = "http://127.0.0.1:8000/api/review/1/"
+headers = login()
+data = {'comment': 'nice product', 'rating': 3}
+get_response = requests.post(endpoints, json=data, headers=headers)
+print(get_response.json())
 
 # endpoints = "http://127.0.0.1:8000/api/products/listing/"
 # data = {"product_name":"second Product", "brand": "second Brand", "description": "second Description",

@@ -50,7 +50,7 @@ class ReviewPermission(BasePermission):
         return False
     
     def has_object_permission(self, request, view, obj):
-        if request.user != obj.owner:
+        if request.user != obj.reviewer:
             return False
         return True
 

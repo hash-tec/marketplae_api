@@ -7,17 +7,17 @@ class ReviewSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        exclude = ["product"]
+        exclude = ["product", 'reviewer']
 
     def validate_rating(self, value):
         if value < 1 or value > 5:
             raise serializers.ValidationError("Rating is between 1 and 5")
         return value
-    def save(self, validated_data= None): 
-        if validated_data is None:
-            validated_data = self.validated_data
+    def create(self, validated_data):
         request = self.context.get('request')
+        Product = self.context.get('product_id')
         validated_data['reviewer'] = request.user
+        validated_data['product'] = Product
         return super().create(validated_data)
 class AllReviewsSerializers(serializers.ModelSerializer):
 

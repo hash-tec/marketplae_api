@@ -4,6 +4,7 @@ from .serializers import ReviewSerializers, AllReviewsSerializers
 from products.models import Product
 from .models import Review
 from rest_framework.response import Response
+from rest_framework import status
 from common.permissions import ReviewPermission
 # Create your views here.
 
@@ -12,22 +13,19 @@ class ReviewsApiView(APIView):
     def post(self, request, **kwargs):
         data = request.data
         product = Product.objects.get (id = kwargs.get('pk'))
-        data['reviewer'] = request.user.get_full_name()
-        serializer = ReviewSerializers(data= data, context={"request":request})
+        serializer = ReviewSerializers(data= data, context={"request":request, "product_id": product })
         if serializer.is_valid():
-            serializer.save(product = product)
+            serializer.save()
             return Response("Success")
         return Response(serializer.errors)
-    def get(self, request, pk = None):
-        if pk is None:
+    
+    def get(self, request, pk):
+        p_id = Product.objects.get(id = pk)
+        try: 
             p_id = Product.objects.get (id = pk)
+        except:
+            return Response("No Review")
+        else:
             reviews = Review.objects.filter(product_id = p_id )
             serializer = AllReviewsSerializers(reviews, many = True)
             return Response (serializer.data)
-        else:
-            
-            reviews = Review.objects.get(id = pk )
-            serializer = AllReviewsSerializers(reviews)
-            return Response (serializer.data)
-
-

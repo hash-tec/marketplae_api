@@ -11,3 +11,10 @@ class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     comment = models.TextField()
     rating = models.IntegerField(default = 0)
+
+    def __str__(self):
+        return self.reviewer.get_full_name()
+    
+    def full_name(self):
+        return self.reviewer.get_full_name()
+    
