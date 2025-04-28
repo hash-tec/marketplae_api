@@ -9,14 +9,14 @@ class Product(models.Model):
 
     category_choice =[
         ("Man Fashion",(
-         ("Man Shirt", "Man T-Shirt"),("Man Shoes", "Man Shoes"),
-         ("Man Work Equipment", "Man Work Equipment"), ("Man Pant", "Man Pants"),
-         ("Man Underwear", "Man Underwear"))),
+         ("man_tshirt", "Man T-Shirt"),("man_shoes", "Man Shoes"),
+         ("manwork_equipment", "Man Work Equipment"), ("man_pants", "Man Pants"),
+         ("man_underwear", "Man Underwear"))),
 
          ("Women's fashion",(
-          ("Dress", "Dress"), ("Woman T-Shirt", "Woman T-shirt"), 
-          ("Woman Pants", "Woman Pants"), ("Skirts", "skirts"), ("Bags", "Bags"),
-          ("High Heels", "High Heels"), ("Bikini", "Bikini")))
+          ("dress", "Dress"), ("woman_tshirt", "Woman T-shirt"), 
+          ("woman_pants", "Woman Pants"), ("skirts", "skirts"), ("bags", "Bags"),
+          ("high_heels", "High Heels"), ("bikini", "Bikini")))
     ]
     size_choice = (
                     ("x", "X"), ("xl", "XL"), 

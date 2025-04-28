@@ -12,8 +12,7 @@ from coupons.serializers import CouponSerializers
 ''' ProductListingApiView allows the creation of an item by creating an instance of the Product models'''
 class ProductListingApiView(APIView):
     def post(self, request):
-        product_data = request.data
-        serializer = ProductSerializers(data = product_data, context = {"request":request}) 
+        serializer = ProductSerializers(data = request.data, context = {"request":request}) 
         if serializer.is_valid():
             serializer.save()
             return Response({"data":serializer.data, "error":serializer.errors},status=status.HTTP_201_CREATED)
@@ -74,8 +73,25 @@ class ProductViewSet(viewsets.ViewSet):
 class CategoryApiView(APIView):
     def get(self, request, *args, **kwargs):
         section = kwargs.get("category")
-        choice =[category[0] for category in Product.category_choice]
-        if not section in choice:
+        men_categories = ['man_tshirt', 'man_shoes', 'manwork_equipment', 'man_pants', 'man_underwear']
+        women_categories = ['dress', 'woman_tshirt', 'woman_pants', 'skirts', 'bags', 'high_heels', 'bikini']
+        categories = []
+        for category in Product.category_choice:
+            print ("category", category)
+            for subcategory in category[1]:
+                sub_category = subcategory[0]
+                categories.append(sub_category)
+        
+        if section =='men':
+            instance = Product.objects.filter(category__in = men_categories)
+            serializer = ProductSerializers(instance, many = True, context = {'request':request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        elif section =='women':
+            instance = Product.objects.filter(category__in = women_categories)
+            serializer = ProductSerializers(instance, many = True, context = {'request':request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        if not section in categories:
             return Response({"message": "Invalid category"}, status=status.HTTP_404_NOT_FOUND)
         else:
             instance = Product.objects.filter(category = section)
