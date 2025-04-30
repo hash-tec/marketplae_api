@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthentic
 from common.permissions import UserPermission, AuthorEditOnly
 from rest_framework import status, viewsets
 from coupons.serializers import CouponSerializers
+from rest_framework.pagination import PageNumberPagination
 # Create your views here.
 
 ''' ProductListingApiView allows the creation of an item by creating an instance of the Product models'''
@@ -20,37 +21,27 @@ class ProductListingApiView(APIView):
             return Response({"message": "Error listing your item", "error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
        
         
-'''ProductViewSet handles the CRUD operations using viewset and routers'''
-class ProductViewSet(viewsets.ViewSet):
-    queryset = Product.objects.all() 
-    ''' get_permissions restrict permissions to some views using a customized permission class
-        pk passed as an argument in retrieve, update, partial_update is a dynamic value passed from the URL in which pk is the identifier
-        '''
-
-    def get_permissions(self):
-        if self.action in ["list", "retrieve"]:
-            return []
-        elif self.action in ["update", "partial_update"]:
-            return [UserPermission()]
-        elif self.action == "destroy":
-            return[UserPermission()]
+''' get_permissions restrict permissions to some views using a customized permission class
+    pk passed as an argument in retrieve, update, partial_update is a dynamic value passed from the URL in which pk is the identifier
+'''
+class ProductApiView(APIView):
+    def get(self, request, pk = None):
+        if pk is None:
+            instance = Product.objects.all()
+            serializer = ProductSerializers(instance, many = True, context = {"request":request})
+            return Response(serializer.data)
         else:
-            return[IsAuthenticated()]
-    def list(self, request):
-        instance = Product.objects.all()
-        serializer = ProductSerializers(instance, many = True, context = {"request":request})
-        return Response(serializer.data)
-    def retrieve(self, request, pk):
-        instance = Product.objects.get(id = pk)
-        serializer = ProductSerializers(instance, context = {"request":request})
-        return Response(serializer.data)
-    def update(self, request, pk):
+            instance = Product.objects.get(id = pk)
+            serializer = ProductSerializers(instance, context = {"request":request})
+            return Response(serializer.data)
+        
+    def put(self, request, pk):
         instance = Product.objects.get(id = pk)
         serializer = ProductSerializers(instance, request.data, context = {"request":request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-    def partial_update(self, request, pk):
+    def patch(self, request, pk):
             instance = Product.objects.get(id = pk)
             serializer = ProductSerializers(instance,request.data, context = {"request":request})
             if serializer.is_valid():
@@ -76,12 +67,15 @@ class CategoryApiView(APIView):
         men_categories = ['man_tshirt', 'man_shoes', 'manwork_equipment', 'man_pants', 'man_underwear']
         women_categories = ['dress', 'woman_tshirt', 'woman_pants', 'skirts', 'bags', 'high_heels', 'bikini']
         categories = []
+        # The for loop block get the choices keys saved into the database from the product model, and it is appended into the categories list
         for category in Product.category_choice:
             print ("category", category)
             for subcategory in category[1]:
                 sub_category = subcategory[0]
                 categories.append(sub_category)
-        
+        ''' This if and elif block get all the product similar to Men's and Women's product 
+        - if the dynamic url is 'men' the  it queries for all the product with the category in the list 'men_categories' 
+        - if the dynamic url is 'women' the  it queries for all the product with the category in the list 'women_categories' '''
         if section =='men':
             instance = Product.objects.filter(category__in = men_categories)
             serializer = ProductSerializers(instance, many = True, context = {'request':request})
@@ -91,6 +85,12 @@ class CategoryApiView(APIView):
             serializer = ProductSerializers(instance, many = True, context = {'request':request})
             return Response(serializer.data, status=status.HTTP_200_OK)
         
+        '''This if and else block is to filter product according to it category, it queries the category field against the dynamic
+          url value
+          - If block is to check if the dynamic url value is a valid choice, if not it return a 404 error
+          -else block 
+            - if block runs the query to get the products belonging to the category
+            - else block return a response if the dynamic value is valid in the category choice but no product has been added to the category'''
         if not section in categories:
             return Response({"message": "Invalid category"}, status=status.HTTP_404_NOT_FOUND)
         else:

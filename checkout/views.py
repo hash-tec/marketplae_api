@@ -10,6 +10,7 @@ from rest_framework.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 
+
 # Create your views here.
 class CheckoutApiView(APIView):
     def get(self, request):
@@ -34,6 +35,7 @@ class CheckoutApiView(APIView):
         user = Cart.objects.get(user = request.user)
         coupon = coupon.objects.get(code = response_data)
 
+'''Shipping address endpoint fetches all the user addresses to choose from, and display the user phone number '''
 class ShippingAddress(APIView):
     def get(self, request):
         user = request.user
