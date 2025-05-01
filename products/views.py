@@ -3,10 +3,8 @@ from .models import Product
 from .serializers import ProductSerializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
 from common.permissions import UserPermission, AuthorEditOnly
-from rest_framework import status, viewsets
-from coupons.serializers import CouponSerializers
+from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 # Create your views here.
 
@@ -24,12 +22,13 @@ class ProductListingApiView(APIView):
 ''' get_permissions restrict permissions to some views using a customized permission class
     pk passed as an argument in retrieve, update, partial_update is a dynamic value passed from the URL in which pk is the identifier
 '''
-class ProductApiView(APIView):
+class ProductApiView(APIView, PageNumberPagination):
     def get(self, request, pk = None):
         if pk is None:
             instance = Product.objects.all()
-            serializer = ProductSerializers(instance, many = True, context = {"request":request})
-            return Response(serializer.data)
+            p_list = self.paginate_queryset(instance, request, view=self)
+            serializer = ProductSerializers(p_list, many = True, context = {"request":request})
+            return self.get_paginated_response(serializer.data)
         else:
             instance = Product.objects.get(id = pk)
             serializer = ProductSerializers(instance, context = {"request":request})
